@@ -320,3 +320,162 @@ function drawModel( angleXX, angleYY, angleZZ,
 	}	
 }
 
+
+function tick() {
+	
+	requestAnimFrame(tick);
+	
+	// NEW --- Processing keyboard events 
+	
+	//handleKeys();
+	
+	//drawScene();
+	
+	//animate();
+}
+
+
+
+
+//----------------------------------------------------------------------------
+//
+//  User Interaction
+//
+
+function outputInfos(){
+		
+}
+
+//----------------------------------------------------------------------------
+
+function setEventListeners( canvas ){
+	
+	// NEW ---Handling the mouse
+	
+	// From learningwebgl.com
+
+//     canvas.onmousedown = handleMouseDown;
+    
+//     document.onmouseup = handleMouseUp;
+    
+//     canvas.onmousemove = handleMouseMove;
+    
+    // NEW ---Handling the keyboard
+	
+	// From learningwebgl.com
+
+//     function handleKeyDown(event) {
+		
+//         currentlyPressedKeys[event.keyCode] = true;
+//     }
+
+//     function handleKeyUp(event) {
+		
+//         currentlyPressedKeys[event.keyCode] = false;
+//     }
+
+// 	document.onkeydown = handleKeyDown;
+    
+//     document.onkeyup = handleKeyUp;      
+
+	document.getElementById("reset-button").onclick = function(){
+		
+		// The initial values
+
+		tx = 0.0;
+
+		ty = 0.0;
+
+		tz = 0.0;
+
+		angleXX = 0.0;
+
+		angleYY = 0.0;
+
+		angleZZ = 0.0;
+
+		sx = 0.25;
+
+		sy = 0.25;
+
+		sz = 0.25;
+		
+		rotationXX_ON = 0;
+		
+		rotationXX_DIR = 1;
+		
+		rotationXX_SPEED = 1;
+
+		rotationYY_ON = 0;
+		
+		rotationYY_DIR = 1;
+		
+		rotationYY_SPEED = 1;
+
+		rotationZZ_ON = 0;
+		
+		rotationZZ_DIR = 1;
+		
+		rotationZZ_SPEED = 1;
+	};      
+
+	document.getElementById("file").onchange = function(){
+		
+		var file = this.files[0];
+		
+		var reader = new FileReader();
+		
+		reader.onload = function( progressEvent ){
+			
+			// Entire file read as a string
+			
+			// The tokens/values in the file
+    
+			// Separation between values is 1 or more whitespaces
+    
+               var tokens = this.result.split(",");
+               
+               console.log(tokens)
+          };
+          reader.readAsText( file );
+     }
+}
+
+function initWebGL( canvas ) {
+	try {
+		// Create the WebGL context
+		// Some browsers still need "experimental-webgl"
+		canvas.width = window.innerWidth * 0.8;
+		canvas.height = window.innerHeight * 0.8;
+
+		gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+
+		primitiveType = gl.TRIANGLES;
+
+		gl.enable( gl.CULL_FACE );
+
+		gl.cullFace( gl.BACK );
+		
+		gl.enable( gl.DEPTH_TEST );
+	} 
+	catch (e) {
+	}
+	if (!gl) {
+		alert("Could not initialise WebGL, sorry! :-(");
+	}        
+}
+
+//----------------------------------------------------------------------------
+
+function runWebGL() {
+	var canvas = document.getElementById("my-canvas");
+
+	initWebGL( canvas );
+
+	shaderProgram = initShaders( gl );
+
+	setEventListeners();
+
+	tick();		// A timer controls the rendering / animation
+
+}
